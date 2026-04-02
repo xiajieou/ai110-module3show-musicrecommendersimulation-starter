@@ -58,6 +58,14 @@ def _score_song_like(user_genre: str, user_mood: str, target_energy: float, like
     return score, explanation
 
 
+def score_song(user_prefs: Dict[str, Any], song: Dict[str, Any]) -> Tuple[float, List[str]]:
+    """Score one song against a user profile and return the score with reasons."""
+    song_object = _song_from_dict(song)
+    score, explanation = _score_song_from_prefs(user_prefs, song_object)
+    reasons = [part.strip() for part in explanation.split(";") if part.strip()]
+    return score, reasons
+
+
 def _score_song_from_prefs(user_prefs: Dict[str, Any], song: Song) -> Tuple[float, str]:
     return _score_song_like(
         str(user_prefs.get("favorite_genre", user_prefs.get("genre", ""))),
@@ -151,17 +159,16 @@ def load_songs(csv_path: str) -> List[Dict[str, Any]]:
             songs.append(song)
     return songs
 
-def recommend_songs(user_prefs: Dict[str, Any], songs: List[Dict[str, Any]], k: int = 5) -> List[Tuple[Dict[str, Any], float, str]]:
+def recommend_songs(user_prefs: Dict[str, Any], songs: List[Dict[str, Any]], k: int = 5) -> List[Tuple[Dict[str, Any], float, List[str]]]:
     """
     Functional implementation of the recommendation logic.
     Required by src/main.py
     """
-    scored_results: List[Tuple[Dict[str, Any], float, str]] = []
+    scored_results: List[Tuple[Dict[str, Any], float, List[str]]] = []
 
     for song_data in songs:
-        song = _song_from_dict(song_data)
-        score, explanation = _score_song_from_prefs(user_prefs, song)
-        scored_results.append((song_data, score, explanation))
+        score, reasons = score_song(user_prefs, song_data)
+        scored_results.append((song_data, score, reasons))
 
     scored_results.sort(key=lambda item: item[1], reverse=True)
     return scored_results[:k]

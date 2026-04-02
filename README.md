@@ -61,6 +61,31 @@ flowchart LR
 
 In other words, the input is the user's taste profile, the process scores each song from the CSV one by one, and the output is a ranked list of the best matches. That separation makes the logic easier to explain, test, and tune.
 
+### CLI Output Snapshot
+
+Verified with `python -m src.main`:
+
+```text
+Loaded songs: 10
+
+Top recommendations:
+
+1. Sunrise City - Score: 4.65
+   Reasons: genre matches; mood matches; energy is close (1.45 points); matches low-acoustic preference
+
+2. Gym Hero - Score: 3.38
+   Reasons: genre matches; energy is close (1.18 points); matches low-acoustic preference
+
+3. Rooftop Lights - Score: 2.60
+   Reasons: mood matches; energy is close (1.40 points); matches low-acoustic preference
+
+4. Night Drive Loop - Score: 1.57
+   Reasons: energy is close (1.38 points); matches low-acoustic preference
+
+5. Storm Runner - Score: 1.43
+   Reasons: energy is close (1.23 points); matches low-acoustic preference
+```
+
 ---
 
 ## Getting Started
